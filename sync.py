@@ -4,6 +4,7 @@ from hashlib import md5
 from datetime import datetime as dt
 import time
 import logging
+import shutil
 
 
 print('Press Just "Enter" for default values')
@@ -50,7 +51,7 @@ def compareFolder(folder, backup):
     return True
 
 def checkFolder(folder, name):
-    # check if folder is exist
+    # check if folder exists
     if os.path.isdir(folder):
         print(f'{name} path: OK')
         logging.info(f'{name} path: OK')
@@ -71,7 +72,8 @@ if __name__=="__main__":
 
     if os.path.isfile('config.txt'):
         print(f"\nconfig file: Present at {os.getcwd()}")
-        os.system("cat config.txt")
+        with open('config.txt') as f:
+            lines = f.readlines()
         logging.info(f'config file: Present')
 
         print("\n\nTo change the config file with new source and folder paths: ")
@@ -95,11 +97,11 @@ if __name__=="__main__":
         # register folder
         print("To create config file: ")
         source = input('Input your source folder path:')
-        # check if folder is exist
+        # check if folder exists
         checkFolder(source, 'source')
 
         backup = input('Input your backup folder path:')
-        # check if backup is exist
+        # check if backup exist
         checkFolder(backup, 'backup')
         # write config
         writeConfig(source, backup)
@@ -141,7 +143,11 @@ if __name__=="__main__":
                     # copy file from folder to backup
                     updatedFile += 1
                     os.remove(backup+'/'+file)
-                    os.system('cp "'+source+'/'+file+'" '+backup)
+                    try:
+                        shutil.copy(f"{source}/{file}", backup)
+                    except IsADirectoryError:
+                        print(f"Error: {file} is a directory")
+                    #os.system('cp "'+source+'/'+file+'" '+backup)
                     print(f'{file} is updated')
                     logging.info(f'{file} is updated')
             if file not in files:
@@ -154,10 +160,14 @@ if __name__=="__main__":
         for file in files:
             if file not in files_backup:
                 # copy file from folder to backup
+                try:
+                    shutil.copy(f"{source}/{file}", backup)
+                except IsADirectoryError:
+                    print(f"Error: {file} is a directory")
                 createdFile += 1
                 print(f'{file} is created')
                 logging.info(f'{file} is created')
-                os.system('cp "'+source+'/'+file+'" '+backup)
+                #os.system('cp "'+source+'/'+file+'" '+backup)
 
 
 
