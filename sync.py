@@ -89,7 +89,6 @@ if __name__=="__main__":
             print(f'config.txt file is changed and created at {os.getcwd()}')
             logging.info('config file: Changed')
         
-
     else:
         logging.error('config file: NOT FOUND')
         print("config file: NOT FOUND")
@@ -107,8 +106,7 @@ if __name__=="__main__":
         print(f'config.txt file is created at {os.getcwd()}')
         logging.info('config file: CREATED')
 
-    # run loop every 30 seconds
-
+    # run loop every 30 seconds by default(or input interval)
 
     while True:
 
